@@ -1,0 +1,172 @@
+
+import UIKit
+import PlaygroundSupport
+
+class vc: UICollectionViewController, UICollectionViewDelegateFlowLayout, HeaderViewDelegate {
+    
+    func didTapCell(indexPath: IndexPath) {
+        self.section = indexPath
+        collectionView.reloadData()
+    }
+
+    fileprivate var section:IndexPath?
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        //view.reloadInputViews()
+        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cellid")
+        
+        collectionView.backgroundColor = .white
+        collectionView.scrollIndicatorInsets = UIEdgeInsets(top: 50, left: 0, bottom: 0, right: 0)
+        
+        collectionView.contentInset = UIEdgeInsets(top: 50, left: 0, bottom: 0, right: 0)
+        
+        setupHeaderView()
+        
+        navigationController?.title = "home"
+        navigationController?.navigationBar.prefersLargeTitles = true
+        
+    }
+    
+    lazy var hv: HeaderView = {
+        let v = HeaderView()
+        v.backgroundColor = .orange
+        v.delegate = self
+        v.isUserInteractionEnabled = true
+        return v
+    }()
+    
+    let customV: UIView = {
+        let v = UIView()
+        v.backgroundColor = .yellow
+        v.layer.cornerRadius = 15
+        return v
+    }()
+    
+    fileprivate func setupHeaderView() {
+        collectionView.addSubview(hv)
+        hv.translatesAutoresizingMaskIntoConstraints = false
+        hv.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0).isActive = true
+        hv.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0).isActive = true
+        hv.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        
+        hv.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        
+        /* collectionView.addSubview(customV)
+        customV.translatesAutoresizingMaskIntoConstraints = false
+        customV.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30).isActive = true
+        customV.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30).isActive = true
+        customV.heightAnchor.constraint(equalToConstant: 200).isActive = true
+        customV.topAnchor.constraint(equalTo: view.topAnchor, constant: 100).isActive = true 
+         */
+        
+    }
+    
+    
+    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 5
+    }
+    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        
+        
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cellid", for: indexPath)
+        switch section?.item {
+            
+            case 0:
+            
+            cell.backgroundColor = .red
+            case 1:
+            
+            cell.backgroundColor = .yellow
+            default:
+            cell.backgroundColor = .orange
+        }
+        /*switch section.item {
+            case 0:
+            cell.backgroundColor = .orange
+            case 1:
+            cell.backgroundColor = .red
+            case 2:
+            cell.backgroundColor = .blue
+            
+        default:
+            cell.backgroundColor = .yellow
+
+} */
+        
+        return cell
+        
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return .init(width: view.frame.width, height: 250)
+    }
+}
+
+protocol HeaderViewDelegate {
+    func didTapCell(indexPath: IndexPath)
+}
+
+class HeaderView: UIView, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+    
+    fileprivate let cellWidth: CGFloat = 50
+    fileprivate let cellOffset: CGFloat = 30
+     var delegate: HeaderViewDelegate?
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        
+        
+        cv.delegate = self
+        cv.dataSource = self
+        cv.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cellid")
+        
+        addSubview(cv)
+        cv.translatesAutoresizingMaskIntoConstraints = false
+        cv.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        cv.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+        cv.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+        cv.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    lazy var cv: UICollectionView = {
+        let v = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
+        if let layout = v.collectionViewLayout as? UICollectionViewFlowLayout {
+            layout.scrollDirection = .horizontal
+            //layout.minimumLineSpacing = (frame.width - 2*(cellOffset+cellWidth))/2
+            layout.minimumLineSpacing = 50
+        }
+        v.backgroundColor = .yellow
+        v.contentInset = UIEdgeInsets(top: 0, left: cellOffset, bottom: 0, right: cellOffset)
+        
+        return v
+    }()
+    
+     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 3
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cellid", for: indexPath)
+        cell.backgroundColor = .blue
+        return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        self.delegate?.didTapCell(indexPath: indexPath)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return .init(width: cellWidth, height: frame.height)
+    }
+    
+}
+
+let gt = vc(collectionViewLayout: UICollectionViewFlowLayout())
+gt.preferredContentSize = CGSize(width: 375, height: 812) //iPhone X
+PlaygroundPage.current.liveView = gt
