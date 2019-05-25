@@ -14,7 +14,6 @@ class vc: UICollectionViewController, UICollectionViewDelegateFlowLayout, Header
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        //view.reloadInputViews()
         collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cellid")
         
         collectionView.backgroundColor = .white
@@ -53,14 +52,6 @@ class vc: UICollectionViewController, UICollectionViewDelegateFlowLayout, Header
         
         hv.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         
-        /* collectionView.addSubview(customV)
-        customV.translatesAutoresizingMaskIntoConstraints = false
-        customV.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30).isActive = true
-        customV.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30).isActive = true
-        customV.heightAnchor.constraint(equalToConstant: 200).isActive = true
-        customV.topAnchor.constraint(equalTo: view.topAnchor, constant: 100).isActive = true 
-         */
-        
     }
     
     
@@ -82,18 +73,6 @@ class vc: UICollectionViewController, UICollectionViewDelegateFlowLayout, Header
             default:
             cell.backgroundColor = .orange
         }
-        /*switch section.item {
-            case 0:
-            cell.backgroundColor = .orange
-            case 1:
-            cell.backgroundColor = .red
-            case 2:
-            cell.backgroundColor = .blue
-            
-        default:
-            cell.backgroundColor = .yellow
-
-} */
         
         return cell
         
@@ -112,7 +91,7 @@ class HeaderView: UIView, UICollectionViewDelegate, UICollectionViewDataSource, 
     
     fileprivate let cellWidth: CGFloat = 50
     fileprivate let cellOffset: CGFloat = 30
-     var delegate: HeaderViewDelegate?
+    var delegate: HeaderViewDelegate?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -138,8 +117,8 @@ class HeaderView: UIView, UICollectionViewDelegate, UICollectionViewDataSource, 
         let v = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
         if let layout = v.collectionViewLayout as? UICollectionViewFlowLayout {
             layout.scrollDirection = .horizontal
-            //layout.minimumLineSpacing = (frame.width - 2*(cellOffset+cellWidth))/2
-            layout.minimumLineSpacing = 50
+            layout.minimumLineSpacing = (frame.width - 2*(cellOffset+cellWidth))/2
+            
         }
         v.backgroundColor = .yellow
         v.contentInset = UIEdgeInsets(top: 0, left: cellOffset, bottom: 0, right: cellOffset)
